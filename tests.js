@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const { describe, it } = require('mocha')
-const validateLineup = require('./index')
+const validateLineup = require('./validateLineup')
 
 describe('validateLineup', () => {
   it('returns true when the lineup satisfies all conditions', () => {
@@ -169,7 +169,7 @@ describe('validateLineup', () => {
     expect(validateLineup(lineup)).to.equal(false)
   })
 
-  it('returns false when the lineup has a total salary greater than 45000', () => {
+  it.only('returns false when the lineup has a total salary greater than 45000', () => {
     const lineup = [{
       id: 1, name: 'Chris Sale', position: 'P', teamId: 12, gameId: 123, salary: 10800
     }, {
