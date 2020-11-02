@@ -1,16 +1,20 @@
 function validateLineup(lineup) {
   let salaries = []
   let teams = []
-  let position = []
+  let games = []
+  let positions = []
 
   for (let i = 0; i < lineup.length; i++) {
     salaries.push(lineup[i].salary)
     teams.push(lineup[i].teamId)
-    position.push(lineup[i].position)
+    games.push(lineup[i].gameId)
+    positions.push(lineup[i].position)
   }
   const teamSalary = salaries.reduce(function (result, item) {
     return result + item
   }, 0)
+
+  const teamSalaryCheck = teamSalary <= 45000 ? true : false
 
   const teamCounts = teams.reduce(function (obj, team) {
     if (!obj[team]) {
@@ -30,7 +34,25 @@ function validateLineup(lineup) {
     }
   }
 
-  const positionCounts = position.reduce(function (obj, pos) {
+  const gameCounts = games.reduce(function (obj, game) {
+    if (!obj[game]) {
+      obj[game] = 1
+    } else {
+      obj[game]++
+    }
+
+    return obj
+  }, {})
+
+  let gameCountCheck = true
+
+  for (let game in gameCounts) {
+    if (gameCounts[game] > 3) {
+      gameCountCheck = false
+    }
+  }
+
+  const positionCounts = positions.reduce(function (obj, pos) {
     if (!obj[pos]) {
       obj[pos] = 1
     } else {
@@ -40,21 +62,19 @@ function validateLineup(lineup) {
     return obj
   }, {})
 
+  let positionCountCheck = positionCounts['OF'] === 3 && Object.keys(positionCounts).length === 7
 
-  console.log(teamCounts)
-  console.log(positionCounts)
-  console.log(teamCountCheck)
+  for (let pos in positionCounts) {
+    if (positionCounts[pos] !== 1 && pos !== 'OF') {
+      positionCountCheck = false
+    }
+  }
 
-  if (teamSalary <= 45000 && teamCountCheck) {
+
+  if (teamSalaryCheck && teamCountCheck && gameCountCheck && positionCountCheck) {
     return true
   }
 
   return false
 }
-
-// map reduce filter
-// reduce for test 1 add player salaries and then reduce to 45k req
-// 2. map or filter?
-// 3. forEach (similar to map? map: array > array of same size; fE: )
-// 4.
 module.exports = validateLineup
